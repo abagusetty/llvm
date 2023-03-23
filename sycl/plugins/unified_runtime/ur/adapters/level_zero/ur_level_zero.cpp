@@ -215,6 +215,10 @@ template <>
 ze_structure_type_t getZeStructureType<ze_memory_allocation_properties_t>() {
   return ZE_STRUCTURE_TYPE_MEMORY_ALLOCATION_PROPERTIES;
 }
+template <>
+ze_structure_type_t getZeStructureType<ze_scheduling_hint_exp_desc_t>() {
+  return ZE_STRUCTURE_TYPE_SCHEDULING_HINT_EXP_PROPERTIES;
+}
 
 template <> zes_structure_type_t getZesStructureType<zes_pci_properties_t>() {
   return ZES_STRUCTURE_TYPE_PCI_PROPERTIES;

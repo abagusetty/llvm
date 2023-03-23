@@ -4481,6 +4481,17 @@ piEnqueueKernelLaunch(pi_queue Queue, pi_kernel Kernel, pi_uint32 WorkDim,
   if (IndirectAccessTrackingEnabled)
     Queue->KernelsToBeSubmitted.push_back(Kernel);
 
+  // Add hints to kernel Launch (if-applicable)
+  if (Queue->isInOrderQueue()) {
+    ZeStruct<ze_scheduling_hint_exp_desc_t> ZeSchedHintDesc;
+    ZeSchedHintDesc.stype = ZE_STRUCTURE_TYPE_SCHEDULING_HINT_EXP_DESC; //ZE_STRUCTURE_TYPE_SCHEDULING_HINT_EXP_PROPERTIES;
+    ZeSchedHintDesc.pNext = nullptr;
+    ZeSchedHintDesc.flags = ZE_SCHEDULING_HINT_EXP_FLAG_OLDEST_FIRST;
+
+    ZE_CALL(zeKernelSchedulingHintExp,
+            (Kernel->ZeKernel, &ZeSchedHintDesc));
+  }
+
   if (Queue->Device->ImmCommandListUsed && IndirectAccessTrackingEnabled) {
     // If using immediate commandlists then gathering of indirect
     // references and appending to the queue (which means submission)
